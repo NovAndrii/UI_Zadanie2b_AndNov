@@ -30,16 +30,14 @@ class Environment:
                 
 
             else:
-                print("Out of Grid")
                 return False
         elif(direction == "D"):
-            if(row + 1 <= self.rows):
+            if(row + 1 < self.rows):
                 row += 1
                 self.moves_count += 1
                 
 
             else:
-                print("Out of Grid")
                 return False
         elif(direction == "L"):
             if(column - 1 >= 0):
@@ -47,18 +45,17 @@ class Environment:
                 self.moves_count += 1
 
             else:
-                print("Out of Grid")
                 return False
         elif(direction == "P"):
-            if(column + 1 <= self.columns):
+            if(column + 1 < self.columns):
                 column += 1
                 self.moves_count += 1
 
             else:
-                print("Out of Grid")
                 return False 
         else:   
             print("There is no such an operation")
+            return False
 
         self.position = (row, column)
 
@@ -102,21 +99,7 @@ class Environment:
 
 
 
-environment = Environment(
-    rows=5,
-    columns=5,
-    start=(0, 0),
-    treasures=[(0, 2), (2, 3), (4, 1)]
-)
 
-environment.display()
-
-environment.move('R')
-environment.display()
-environment.move('R')
-environment.display()
-environment.move('D')
-environment.display()
 
 
 

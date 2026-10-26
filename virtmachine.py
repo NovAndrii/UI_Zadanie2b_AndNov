@@ -19,6 +19,7 @@ class VirtualMachine:
         operation = instruction >> 6
         address = instruction & 63 # here I use AND with 63 to get only 6 bits
 
+        
         if operation == 0:
             self.memory[address] = (self.memory[address] + 1) % 256
         elif operation == 1:
@@ -34,7 +35,7 @@ class VirtualMachine:
                 self.instructions_executed += 1
                 return False
 
-        if operation != 2: # since if it is then jump has already seta new instruction
+        if operation != 2: # since if it is 2 then jump has already set a new instruction
             self.instruction_pointer = (self.instruction_pointer + 1) % 64
 
         self.instructions_executed += 1
