@@ -92,9 +92,9 @@ for seed in range(1, seed_limit+1):
             environment.display()
 
             # UNcommNET BEFORE SUBMISSION 
-            #if not ask_to_continue():
-            #    generations_to_success.append(None)  
-            #    break
+            if not ask_to_continue():
+                generations_to_success.append(None)  
+                break
 
         if best_fitness > best_so_far:
             best_so_far = best_fitness
