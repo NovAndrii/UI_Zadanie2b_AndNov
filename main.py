@@ -39,8 +39,8 @@ vm = VirtualMachine(environment)
 
 seed_limit = 10
 
-
-population = create_population(20)
+population_size = 100
+population = create_population(population_size)
 generation_limit = 20
 selection_method = "tournament"
 
@@ -54,6 +54,8 @@ for seed in range(1, seed_limit+1):
     random.seed(seed)
 
     generation = 0
+    stagnation_count = 0
+    best_so_far = 0
     history = []
     population = create_population(20)
 
@@ -61,6 +63,7 @@ for seed in range(1, seed_limit+1):
 
     while True:
         generation += 1
+    
         fitness_scores = evaluate_population(population, vm)
 
         best_index = max(range(len(population)), key=lambda index: fitness_scores[index])
@@ -80,17 +83,32 @@ for seed in range(1, seed_limit+1):
             generations_to_success.append(generation)
             break
 
+        
+
         if generation % generation_limit == 0:
             vm.run(best_program)
             print("Best program:", best_program)
             print("Output:", vm.output)
             environment.display()
 
+            # UNcommNET BEFORE SUBMISSION 
             #if not ask_to_continue():
             #    generations_to_success.append(None)  
             #    break
 
-        population = next_generation(population, fitness_scores, selection_method=selection_method)
+        if best_fitness > best_so_far:
+            best_so_far = best_fitness
+            stagnation_count = 0
+        else:
+            stagnation_count += 1    
+
+        if stagnation_count >= 200:
+            for i in range(len(population) // 2, len(population)):
+                population[i] = [random.randint(0, 255) for _ in range(64)]
+
+            stagnation_count = 0    
+        else:    
+            population = next_generation(population, fitness_scores, selection_method=selection_method)
 
     all_histories.append(history.copy())    
 

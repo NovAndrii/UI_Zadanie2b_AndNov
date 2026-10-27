@@ -42,17 +42,39 @@ def crossover(parent1, parent2):
 
     return child1, child2
 
-def mutate(program, mutation_rate=0.02):
+def mutate(program):
     mutated = program.copy()
 
     for index in range(len(mutated)):
-        if random.random() < mutation_rate:
+        #flip one random chosen bit
+        if random.random() < 0.02:
+            bit = random.randint(0, 7)
+            mutated[index] ^= 1 << bit
+
+        #replace the byte
+        if random.random() < 0.01:
             mutated[index] = random.randint(0, 255)
+
+        # invert all eight bits
+        if random.random() < 0.005:
+            mutated[index] ^= 255  #XOR
+
+        #swap with a neighbour cell
+        if random.random() < 0.005:
+            neighbours = [
+                neighbour
+                for neighbour in (index - 1, index + 1)
+                if 0 <= neighbour < len(mutated)
+            ]
+            neighbour = random.choice(neighbours)
+            mutated[index], mutated[neighbour] = (
+                mutated[neighbour], mutated[index]
+            )
 
     return mutated
 
 
-def next_generation(population, fitness_scores, mutation_rate=0.02, selection_method="tournament"):
+def next_generation(population, fitness_scores, selection_method="tournament"):
     best_index = max(
         range(len(population)),
         key=lambda index: fitness_scores[index]
@@ -74,10 +96,10 @@ def next_generation(population, fitness_scores, mutation_rate=0.02, selection_me
 
         child1, child2 = crossover(parent1, parent2)
 
-        new_population.append(mutate(child1, mutation_rate))
+        new_population.append(mutate(child1))
 
         if len(new_population) < len(population):
-            new_population.append(mutate(child2, mutation_rate))
+            new_population.append(mutate(child2))
 
     return new_population
 
